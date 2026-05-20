@@ -1,9 +1,44 @@
-import example.pepita
+import tito.*
+import bebidas.*
 
-describe "group of tests for pepita" {
+describe "Test de Tito" {
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+  test "tito consume whisky y se conoce su sustancia actual" {
+    tito.consumir(10, whisky)
+    assert.equals(whisky, tito.sustanciaActual())
+  }
+
+  test "velocidad con whisky dosis 10" {
+    tito.consumir(10, whisky)
+    // rendimiento: 0.9 ** 10 = 0.3486784401
+    // velocidad: 0.3486784401 * 490 / 70 = 2.4407490807
+    assert.equals(0.9 ** 10 * 490 / 70, tito.velocidad())
+  }
+
+  test "velocidad con tereré dosis 5 (rinde menos que 1, aplica mínimo)" {
+    tito.consumir(5, terere)
+    // rendimiento: (0.1 * 5).max(1) = 0.5.max(1) = 1
+    // velocidad: 1 * 490 / 70 = 7
+    assert.equals(7.0, tito.velocidad())
+  }
+
+  test "velocidad con tereré dosis 20 (supera el mínimo)" {
+    tito.consumir(20, terere)
+    // rendimiento: (0.1 * 20).max(1) = 2.0.max(1) = 2.0
+    // velocidad: 2.0 * 490 / 70 = 14.0
+    assert.equals(14.0, tito.velocidad())
+  }
+
+  test "velocidad con cianuro siempre es 0" {
+    tito.consumir(999, cianuro)
+    assert.equals(0.0, tito.velocidad())
+  }
+
+  test "cada bebida reemplaza a la anterior" {
+    tito.consumir(10, whisky)
+    tito.consumir(5, terere)
+    assert.equals(terere, tito.sustanciaActual())
+    assert.equals(5, tito.dosisConsumida())
   }
 
 }
